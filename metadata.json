@@ -1,0 +1,6 @@
+{
+  "name": "2026全國智慧運算與量子資訊創新應用競賽",
+  "description": "中原大學智慧運算與量子資訊學院主辦之2026年全國智慧運算與量子資訊創新應用競賽整合平台，提供競賽章程、線上分步報名、參賽證號產生與FAQ常見問答。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
