@@ -117,63 +117,6 @@ export const AboutSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Evaluation Criteria */}
-        <div className="bg-slate-900 text-white rounded-2xl p-8 sm:p-10 mb-16 shadow-xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-slate-800 pb-6">
-            <div>
-              <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Evaluation Metrics</span>
-              <h3 className="text-2xl font-bold mt-1 text-white">競賽評審標準</h3>
-            </div>
-            <p className="text-sm text-slate-400 max-w-md">
-              邀請來自聯新國際醫療、仁寶電腦、中國信託商業銀行及學術界頂尖學者組成專家評審團進行盲審與現場評析。
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-lg font-bold text-cyan-300">階段一：書面資料初審</h4>
-                <span className="text-xs px-2.5 py-1 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30">線上書面審查</span>
-              </div>
-              <ul className="space-y-3 text-sm text-slate-300">
-                <li className="flex items-center justify-between">
-                  <span>作品創新性與構想獨特性</span>
-                  <span className="font-bold text-white">35%</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>應用可行性與技術架構合理性</span>
-                  <span className="font-bold text-white">35%</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>書面資料完整性與論述清晰度</span>
-                  <span className="font-bold text-white">30%</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-lg font-bold text-cyan-300">階段二：決賽現場展示與問答</h4>
-                <span className="text-xs px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">現場評分</span>
-              </div>
-              <ul className="space-y-3 text-sm text-slate-300">
-                <li className="flex items-center justify-between">
-                  <span>創新性與前瞻價值</span>
-                  <span className="font-bold text-white">30%</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>技術成熟度與實作完整性</span>
-                  <span className="font-bold text-white">40%</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>海報展示、簡報表達與問答反應</span>
-                  <span className="font-bold text-white">30%</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
         {/* Organizations & Sponsors */}
         <div className="border border-slate-200 rounded-2xl p-8 bg-slate-50/60">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

@@ -27,7 +27,7 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
       startDate: new Date('2026-11-19T00:00:00'),
       endDate: new Date('2026-11-24T23:59:59'),
       defaultBadge: '審核階段',
-      desc: '由產學研專家評審團依據「作品創新性 (35%)」、「應用可行性 (35%)」、「書面資料完整性 (30%)」進行書面審核評分，擇優遴選晉級決賽隊伍。',
+      desc: '由產學研專家評審團進行書面審核，擇優遴選晉級決賽隊伍。',
       location: '評審委員會評核'
     },
     {
