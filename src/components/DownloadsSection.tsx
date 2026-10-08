@@ -180,7 +180,7 @@ export const DownloadsSection: React.FC = () => {
 
               <div>
                 <strong>格式上限：</strong>
-                <p>書面報告上限至多 10 頁（含封面、目錄及參考文獻），超過者評審得酌予扣分。</p>
+                <p>書面報告上限至多 10 頁（不含參考文獻），超過者評審得酌予扣分。</p>
               </div>
 
               <div>

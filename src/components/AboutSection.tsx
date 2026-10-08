@@ -104,7 +104,7 @@ export const AboutSection: React.FC = () => {
             <FileCheck2 className="w-6 h-6 text-emerald-600 mb-3" />
             <h4 className="text-base font-bold text-slate-900 mb-1">書面報告書</h4>
             <p className="text-xs text-slate-600 leading-relaxed">
-              繳交 1 份作品報告文件，上限 <strong>至多 10 頁</strong>（含封面與目錄）。另須檢附全體組員含指導老師簽署之授權同意書。
+              繳交 1 份作品報告文件，上限 <strong>至多 10 頁</strong>（不含參考文獻）。另須檢附全體組員含指導老師簽署之授權同意書。
             </p>
           </div>
 
