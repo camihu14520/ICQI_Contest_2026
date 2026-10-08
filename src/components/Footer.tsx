@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Building2, ExternalLink, ArrowUp, Settings } from 'lucide-react';
-import { SheetSettingsModal } from './SheetSettingsModal';
+import React from 'react';
+import { Mail, Phone, MapPin, Building2, ExternalLink, ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -155,14 +152,6 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex flex-wrap items-center gap-3">
             <span>© 2026 中原大學智慧運算與量子資訊學院 College of Intelligent Computing and Quantum Information. 版權所有.</span>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="inline-flex items-center gap-1 text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer text-2xs px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700 hover:border-cyan-500/50"
-              title="主辦方 Google 試算表 Webhook 連線設定"
-            >
-              <Settings className="w-3 h-3" />
-              <span>試算表連線設定</span>
-            </button>
           </div>
           <button
             onClick={scrollToTop}
@@ -174,12 +163,6 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
         </div>
 
       </div>
-
-      {/* Sheet Settings Modal */}
-      <SheetSettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
     </footer>
   );
 };
