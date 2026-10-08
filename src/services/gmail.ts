@@ -92,7 +92,7 @@ export const sendRegistrationNotificationEmail = async (
       <div style="max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
         <div style="background: linear-gradient(135deg, #034694 0%, #0284c7 100%); color: #ffffff; padding: 28px 24px; text-align: center;">
           <h1 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700;">2026 全國智慧運算與量子資訊創新應用競賽</h1>
-          <p style="margin: 0; font-size: 14px; opacity: 0.9;">主辦單位：中原大學智慧運算與量子資訊學院｜共同主辦單位：凱衛資訊股份有限公司</p>
+          <p style="margin: 0; font-size: 14px; opacity: 0.9;">教育部高教深耕計畫及精進校務經營補助計畫<br/>主辦單位：中原大學智慧運算與量子資訊學院、電機資訊學院、商學院、量子資訊中心<br/>共同主辦單位：凱衛資訊股份有限公司</p>
         </div>
         
         <div style="padding: 24px;">

@@ -186,26 +186,21 @@ export const AboutSection: React.FC = () => {
                 中原大學智慧運算與量子資訊學院
               </h4>
               <p className="text-sm text-slate-600 leading-relaxed">
-                全台首座專注於智慧運算與量子科技之特色學院，攜手電機資訊學院、商學院與量子資訊中心，並與共同主辦單位凱衛資訊股份有限公司合作，共同培育新世代高階運算科技跨域菁英。
+                全台首座專注於智慧運算與量子科技之特色學院。本競賽由中原大學智慧運算與量子資訊學院、電機資訊學院、商學院、量子資訊中心主辦，凱衛資訊股份有限公司共同主辦。
               </p>
             </div>
 
             <div className="space-y-3 text-sm text-slate-700 bg-white p-6 rounded-xl border border-slate-200">
               <div>
+                <span className="text-slate-600">教育部高教深耕計畫及精進校務經營補助計畫</span>
+              </div>
+              <div>
                 <span className="font-bold text-slate-900">主辦單位：</span>
-                <span className="text-slate-600">中原大學智慧運算與量子資訊學院</span>
+                <span className="text-slate-600">中原大學智慧運算與量子資訊學院、電機資訊學院、商學院、量子資訊中心</span>
               </div>
               <div>
                 <span className="font-bold text-slate-900">共同主辦單位：</span>
                 <span className="text-blue-700 font-semibold">凱衛資訊股份有限公司</span>
-              </div>
-              <div>
-                <span className="font-bold text-slate-900">協辦單位：</span>
-                <span className="text-slate-600">中原大學電機資訊學院、商學院、量子資訊中心</span>
-              </div>
-              <div>
-                <span className="font-bold text-slate-900">指導補助計畫：</span>
-                <span className="text-slate-600">教育部高等教育深耕計畫、精進校務經營補助計畫</span>
               </div>
             </div>
           </div>
