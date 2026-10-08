@@ -93,6 +93,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               內容涵蓋智慧運算在工程、社會、健康、金融、商務等領域之創新應用與實務落地！
             </p>
 
+            <p className="text-sm text-slate-300 leading-relaxed">
+              <span className="text-slate-400">主辦單位</span>{' '}
+              <span className="font-semibold text-white">中原大學智慧運算與量子資訊學院</span>
+              <span className="mx-2 text-slate-600">｜</span>
+              <span className="text-slate-400">共同主辦單位</span>{' '}
+              <span className="font-semibold text-cyan-200">凱衛資訊股份有限公司</span>
+            </p>
+
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <button

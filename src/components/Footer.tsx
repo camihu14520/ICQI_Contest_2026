@@ -40,8 +40,9 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               以推動「智慧運算」與「量子資訊」先進科技為核心，整合學界與產業前瞻資源，培育新世代科技與跨領域應用創新人才。
             </p>
             <div className="pt-2 text-xs text-slate-400 space-y-1">
+              <div>主辦單位：中原大學智慧運算與量子資訊學院</div>
+              <div>共同主辦單位：凱衛資訊股份有限公司</div>
               <div>指導補助：教育部高等教育深耕計畫、精進校務經營補助計畫</div>
-              <div>企業贊助：凱衛資訊股份有限公司 (KeyWare Information Technology)</div>
             </div>
           </div>
 
