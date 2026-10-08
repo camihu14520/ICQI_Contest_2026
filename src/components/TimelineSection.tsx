@@ -27,7 +27,7 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
       startDate: new Date('2026-11-19T00:00:00'),
       endDate: new Date('2026-11-24T23:59:59'),
       defaultBadge: '審核階段',
-      desc: '由產學研專家評審團進行書面審核，擇優遴選晉級決賽隊伍。',
+      desc: '由產學研專家評審團進行書面審核，擇優遴選晉級決賽隊伍。初審評分標準依作品創新性、可行性、書面資料完整性審查。',
       location: '評審委員會評核'
     },
     {
@@ -37,7 +37,7 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
       startDate: new Date('2026-11-25T00:00:00'),
       endDate: new Date('2026-12-03T23:59:59'),
       defaultBadge: '名單公布',
-      desc: '正式入圍決賽隊伍名單將公告於本競賽網站最新消息，競賽辦公室並將同步以 Email 發送決賽入圍通知與報到須知至各隊長與指導老師信箱。',
+      desc: '正式入圍決賽隊伍名單將公告於本競賽網站最新消息，競賽辦公室並將同步以 Email 發送決賽入圍通知與報到須知至各隊長與指導老師信箱。決賽作品以海報展示報告，得展示實物作品、影片等，評分標準依創新性、技術成熟度、與作品完成度/作品可行性判定。',
       location: '官網公告 & 電子郵件個別通知'
     },
     {
