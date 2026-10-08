@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
               <img 
-                src="/assets/logo.png" 
+                src={`${import.meta.env.BASE_URL}assets/logo.png`} 
                 alt="CYCU ICQI Logo" 
                 className="h-14 w-auto object-contain bg-white/95 p-1.5 rounded-xl"
               />

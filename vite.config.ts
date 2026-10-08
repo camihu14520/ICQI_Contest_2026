@@ -9,6 +9,8 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig(() => {
   return {
+    // GitHub Pages project site: https://camihu14520.github.io/ICQI_Contest_2026/
+    base: process.env.GITHUB_PAGES === 'true' ? '/ICQI_Contest_2026/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

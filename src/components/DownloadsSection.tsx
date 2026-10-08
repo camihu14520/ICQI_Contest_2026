@@ -13,7 +13,7 @@ export const DownloadsSection: React.FC = () => {
       category: '必繳文件',
       desc: '全體組員含指導老師皆需親筆簽署（或電子簽名掃描檔），確認無抄襲行為並同意個資蒐集與競賽成果推廣使用。',
       format: 'ODT 格式 (LibreOffice / Word 開啟)',
-      localPath: '/assets/2026全國智慧運算與量子資訊創新應用競賽_專題競賽「著作權授權暨個人資料使用」團體同意書_公告版.odt',
+      localPath: `${import.meta.env.BASE_URL}assets/2026全國智慧運算與量子資訊創新應用競賽_專題競賽「著作權授權暨個人資料使用」團體同意書_公告版.odt`,
       driveUrl: 'https://drive.google.com/file/d/1qhv0ncayTehma4A5HL4yypkv37fsgE2m/view?usp=sharing',
       filename: '2026全國智慧運算與量子資訊創新應用競賽_專題競賽「著作權授權暨個人資料使用」團體同意書_公告版.odt',
       badge: '必繳'
@@ -24,7 +24,7 @@ export const DownloadsSection: React.FC = () => {
       category: '必繳文件',
       desc: '包含封面、研究動機與痛點、系統架構設計、核心演算法實作、實驗數據與應用效益、未來展望等章節規格。',
       format: 'ODT 格式 (LibreOffice / Word 開啟)',
-      localPath: '/assets/2026全國智慧運算與量子資訊創新應用競賽_書面報告書範例_公告版.odt',
+      localPath: `${import.meta.env.BASE_URL}assets/2026全國智慧運算與量子資訊創新應用競賽_書面報告書範例_公告版.odt`,
       driveUrl: 'https://drive.google.com/file/d/1pHtGm5_O4SZyxdiWtl_YhRoqMycC1UHH/view?usp=sharing',
       filename: '2026全國智慧運算與量子資訊創新應用競賽_書面報告書範例_公告版.odt',
       badge: '範本'
