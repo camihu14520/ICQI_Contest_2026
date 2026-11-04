@@ -5,7 +5,6 @@ import {
   Award, 
   Calendar, 
   FileText, 
-  Search, 
   HelpCircle, 
   Download 
 } from 'lucide-react';
@@ -26,7 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'timeline', label: '重要時程', icon: Calendar },
     { id: 'awards', label: '競賽獎項', icon: Award },
     { id: 'register', label: '線上報名', icon: FileText, highlight: true },
-    { id: 'lookup', label: '參賽證查詢', icon: Search },
     { id: 'faq', label: '常見問題', icon: HelpCircle },
     { id: 'downloads', label: '下載專區', icon: Download }
   ];

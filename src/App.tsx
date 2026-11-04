@@ -10,7 +10,6 @@ import { AboutSection } from './components/AboutSection';
 import { TimelineSection } from './components/TimelineSection';
 import { AwardsSection } from './components/AwardsSection';
 import { RegistrationForm } from './components/RegistrationForm';
-import { StatusLookup } from './components/StatusLookup';
 import { DownloadsSection } from './components/DownloadsSection';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
@@ -38,7 +37,6 @@ export default function App() {
           <>
             <HeroSection
               onRegisterClick={() => setActiveTab('register')}
-              onLookupClick={() => setActiveTab('lookup')}
               onDownloadsClick={() => setActiveTab('downloads')}
             />
             <AboutSection />
@@ -46,10 +44,6 @@ export default function App() {
             <AwardsSection />
             <RegistrationForm
               onSuccessfulSubmit={handleRegistrationCompleted}
-              onNavigateLookup={() => setActiveTab('lookup')}
-            />
-            <StatusLookup
-              onRegisterClick={() => setActiveTab('register')}
             />
             <DownloadsSection />
             <FaqSection />
@@ -72,15 +66,6 @@ export default function App() {
           <div className="py-8">
             <RegistrationForm
               onSuccessfulSubmit={handleRegistrationCompleted}
-              onNavigateLookup={() => setActiveTab('lookup')}
-            />
-          </div>
-        )}
-
-        {activeTab === 'lookup' && (
-          <div className="py-8">
-            <StatusLookup
-              onRegisterClick={() => setActiveTab('register')}
             />
           </div>
         )}

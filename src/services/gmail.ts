@@ -4,7 +4,7 @@ import { getAccessToken } from './googleAuth';
 const GMAIL_API = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
 
 // Default contest coordinator email at CYCU ICQI
-export const DEFAULT_COORDINATOR_EMAIL = 'yihsuan@cycu.edu.tw';
+export const DEFAULT_COORDINATOR_EMAIL = 'icqi@cycu.edu.tw';
 
 export interface SendEmailResult {
   success: boolean;

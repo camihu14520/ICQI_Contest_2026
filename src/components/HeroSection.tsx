@@ -3,7 +3,6 @@ import {
   Sparkles, 
   ArrowRight, 
   Calendar, 
-  Search, 
   Download, 
   CheckCircle2, 
   Clock, 
@@ -14,13 +13,11 @@ import {
 
 interface HeroSectionProps {
   onRegisterClick: () => void;
-  onLookupClick: () => void;
   onDownloadsClick: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onRegisterClick,
-  onLookupClick,
   onDownloadsClick
 }) => {
   // Countdown to 2026-11-18 23:59:59 (Deadline)
@@ -75,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-xs font-black tracking-widest uppercase">
-                <span>— 2026 全國前瞻科技競賽 —</span>
+                <span>高等教育深耕計畫補助</span>
               </div>
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-white">
                 <span className="block text-2xl sm:text-3xl md:text-4xl font-black text-cyan-300 tracking-wider mb-1">
@@ -116,18 +113,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
 
               <button
-                onClick={onLookupClick}
+                onClick={onDownloadsClick}
                 className="px-5 py-3.5 rounded-xl font-semibold text-base bg-white/10 hover:bg-white/15 text-white border border-white/20 transition-all flex items-center gap-2 backdrop-blur-xs cursor-pointer"
               >
-                <Search className="w-4 h-4 text-cyan-300" />
-                <span>參賽證與進度查詢</span>
-              </button>
-
-              <button
-                onClick={onDownloadsClick}
-                className="px-4 py-3.5 rounded-xl font-medium text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4 text-cyan-300" />
                 <span>簡章與範本下載</span>
               </button>
             </div>
@@ -217,7 +206,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
                   <div>
                     <strong className="text-white block text-sm">線上即時登記與證號核發</strong>
-                    送出報名後立即核發參賽證號，可隨時查詢初審與決賽進度。
+                    送出報名後立即核發專屬參賽證號，初審名單將於官網統一公告。
                   </div>
                 </div>
               </div>

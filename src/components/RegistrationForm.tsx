@@ -33,7 +33,6 @@ import { sendRegistrationNotificationEmail, DEFAULT_COORDINATOR_EMAIL } from '..
 
 interface RegistrationFormProps {
   onSuccessfulSubmit: (reg: CompetitionRegistration) => void;
-  onNavigateLookup?: () => void;
 }
 
 const DOMAIN_OPTIONS: { id: DomainCategory; name: string; icon: any; desc: string }[] = [
@@ -77,8 +76,7 @@ const APPLICATION_FIELDS: ApplicationField[] = [
 ];
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({
-  onSuccessfulSubmit,
-  onNavigateLookup
+  onSuccessfulSubmit
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -479,7 +477,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               <strong>💡 貼心提醒：</strong>
               <p className="mt-1">
                 請妥善記錄您的參賽證編號 <strong>{submittedRegistration.id}</strong>。
-                初審結果預計於 2026/11/25 前公告，您可隨時至「參賽證查詢」專區輸入證號或隊長 Email 查詢最新審核進度。
+                初審結果預計於 2026/11/25 前由主辦單位官方網站統一公告，並同步寄發通知信件至隊長 Email 信箱。
               </p>
             </div>
 
@@ -490,21 +488,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm transition-all cursor-pointer"
               >
                 再填寫一筆報名
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onNavigateLookup) {
-                    onNavigateLookup();
-                  } else {
-                    const lookupEl = document.getElementById('lookup');
-                    if (lookupEl) lookupEl.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <span>前往進度查詢專區</span>
-                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -767,7 +750,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.name}
                       onChange={(e) => setLeader({ ...leader, name: e.target.value })}
-                      placeholder="例：林宇軒"
+                      placeholder="請輸入隊長姓名"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -781,7 +764,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.school}
                       onChange={(e) => setLeader({ ...leader, school: e.target.value })}
-                      placeholder="例：中原大學"
+                      placeholder="例：大專院校名稱"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -795,7 +778,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.department}
                       onChange={(e) => setLeader({ ...leader, department: e.target.value })}
-                      placeholder="例：智慧運算與大數據學士班"
+                      placeholder="例：就讀學系所屬科系"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -828,7 +811,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.studentId}
                       onChange={(e) => setLeader({ ...leader, studentId: e.target.value })}
-                      placeholder="例：11027101"
+                      placeholder="請輸入學生證學號"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -842,7 +825,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.phone}
                       onChange={(e) => setLeader({ ...leader, phone: e.target.value })}
-                      placeholder="例：0912-345-678"
+                      placeholder="請輸入手機號碼"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -856,7 +839,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       required
                       value={leader.email}
                       onChange={(e) => setLeader({ ...leader, email: e.target.value })}
-                      placeholder="例：lin.yh@example.edu.tw"
+                      placeholder="請輸入常用 Email 信箱"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                     />
                   </div>
@@ -1027,7 +1010,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         required
                         value={adv.name}
                         onChange={(e) => handleUpdateAdvisor(idx, 'name', e.target.value)}
-                        placeholder="例：胡筱薇"
+                        placeholder="請輸入老師姓名"
                         className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm bg-white"
                       />
                     </div>
@@ -1041,7 +1024,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         required
                         value={adv.institution}
                         onChange={(e) => handleUpdateAdvisor(idx, 'institution', e.target.value)}
-                        placeholder="例：中原大學 智慧運算與量子資訊學院"
+                        placeholder="例：大專院校及服務系所"
                         className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm bg-white"
                       />
                     </div>
@@ -1055,7 +1038,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         required
                         value={adv.title}
                         onChange={(e) => handleUpdateAdvisor(idx, 'title', e.target.value)}
-                        placeholder="例：副教授 / 教授 / 助理教授"
+                        placeholder="例：教授 / 副教授 / 助理教授"
                         className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm bg-white"
                       />
                     </div>
@@ -1068,7 +1051,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         type="tel"
                         value={adv.phone}
                         onChange={(e) => handleUpdateAdvisor(idx, 'phone', e.target.value)}
-                        placeholder="例：03-265-4080"
+                        placeholder="例：03-0000000#分機"
                         className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm bg-white"
                       />
                     </div>
@@ -1081,7 +1064,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                         type="email"
                         value={adv.email}
                         onChange={(e) => handleUpdateAdvisor(idx, 'email', e.target.value)}
-                        placeholder="例：advisor@cycu.edu.tw"
+                        placeholder="例：advisor@university.edu.tw"
                         className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm bg-white"
                       />
                     </div>
@@ -1374,8 +1357,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 <span>報名確認事項：</span>
               </div>
               <p>• 確認送出後，系統將正式核發專屬參賽證編號。</p>
-              <p>• 報名資料將即時登記於競賽資料庫，供隨時線上查詢進度。</p>
-              <p>• 請妥善保存參賽證編號，以供後續初審與決賽進度查詢。</p>
+              <p>• 報名資料將即時登記於主辦單位收件系統。</p>
+              <p>• 請妥善保存參賽證編號，後續初審通過公告與決賽報到將以此為依據。</p>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">

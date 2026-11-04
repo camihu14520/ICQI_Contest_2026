@@ -20,26 +20,19 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
               <img 
-                src={`${import.meta.env.BASE_URL}assets/logo.png`} 
+                src="/assets/logo.png" 
                 alt="CYCU ICQI Logo" 
                 className="h-14 w-auto object-contain bg-white/95 p-1.5 rounded-xl"
               />
-              <div>
-                <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">
-                  中原大學 智慧運算與量子資訊學院
-                </div>
-                <h3 className="text-lg font-bold text-white leading-tight">
-                  2026全國智慧運算與量子資訊創新應用競賽
-                </h3>
-              </div>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md">
               以推動「智慧運算」與「量子資訊」先進科技為核心，整合學界與產業前瞻資源，培育新世代科技與跨領域應用創新人才。
             </p>
             <div className="pt-2 text-xs text-slate-400 space-y-1">
-              <div>教育部高教深耕計畫及精進校務經營補助計畫</div>
-              <div>主辦單位：中原大學智慧運算與量子資訊學院、電機資訊學院、商學院、量子資訊中心</div>
-              <div>共同主辦單位：凱衛資訊股份有限公司</div>
+              <div>主辦單位：中原大學智慧運算與量子資訊學院</div>
+              <div className="text-cyan-300">協辦單位：中原大學競爭力發展中心</div>
+              <div>指導補助：教育部高等教育深耕計畫、精進校務經營補助計畫</div>
+              <div>企業贊助：凱衛資訊股份有限公司 (KeyWare Information Technology)</div>
             </div>
           </div>
 
@@ -79,14 +72,6 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                   className="hover:text-cyan-400 transition-colors text-cyan-300 font-medium cursor-pointer"
                 >
                   前往線上分步報名
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => { setActiveTab('lookup'); scrollToTop(); }}
-                  className="hover:text-cyan-400 transition-colors cursor-pointer"
-                >
-                  參賽證編號與審核進度查詢
                 </button>
               </li>
               <li>
