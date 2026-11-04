@@ -28,7 +28,7 @@ import {
   AdvisorMember 
 } from '../types/competition';
 import { generateNextPassId, saveRegistration, getSettings } from '../services/storage';
-import { appendRegistrationRow } from '../services/googleSheets';
+import { appendRegistrationRow, DEFAULT_SPREADSHEET_ID } from '../services/googleSheets';
 import { sendRegistrationNotificationEmail, DEFAULT_COORDINATOR_EMAIL } from '../services/gmail';
 
 interface RegistrationFormProps {
@@ -363,14 +363,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     try {
       const settings = getSettings();
 
-      // 1. Google Spreadsheet Sync
-      if (settings.spreadsheetId) {
-        try {
-          await appendRegistrationRow(settings.spreadsheetId, reg);
-          reg.syncedToGoogleSheet = true;
-        } catch (sheetErr) {
-          console.warn('Google Sheet append error:', sheetErr);
-        }
+      // 1. Google Spreadsheet Sync (即時單向寫入主辦端試算表)
+      try {
+        await appendRegistrationRow(settings.spreadsheetId || DEFAULT_SPREADSHEET_ID, reg);
+        reg.syncedToGoogleSheet = true;
+      } catch (sheetErr) {
+        console.warn('Google Sheet append error:', sheetErr);
       }
 
       // 2. Automated Gmail Notification to Competition Director / Organizer

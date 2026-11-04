@@ -12,10 +12,10 @@ export interface AppSettings {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-  spreadsheetId: '',
-  spreadsheetUrl: '',
+  spreadsheetId: '18APyNoO07AO4ZxM1QIrwCi0EzSHntOvBVc1C7sMFWdM',
+  spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/18APyNoO07AO4ZxM1QIrwCi0EzSHntOvBVc1C7sMFWdM/edit',
   coordinatorEmail: 'icqi@cycu.edu.tw',
-  autoSyncToSheet: false,
+  autoSyncToSheet: true,
   autoSendEmail: false,
 };
 

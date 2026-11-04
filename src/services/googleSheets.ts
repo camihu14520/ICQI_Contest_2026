@@ -167,15 +167,17 @@ export const createNewCompetitionSheet = async (customTitle?: string): Promise<{
   return { spreadsheetId, spreadsheetUrl };
 };
 
+export const DEFAULT_SPREADSHEET_ID = '18APyNoO07AO4ZxM1QIrwCi0EzSHntOvBVc1C7sMFWdM';
 export const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo7p2fnRwoGL1suMFtrk-qbtFKAJOlUFlkXQQ2P9qwB-v1rJ3ZFcAsYKZXk91umHF3jg/exec';
 
 /**
  * Append a single registration row to the Google Spreadsheet
  */
 export const appendRegistrationRow = async (
-  spreadsheetId: string, 
+  spreadsheetId: string = DEFAULT_SPREADSHEET_ID, 
   registration: CompetitionRegistration
 ): Promise<boolean> => {
+  const targetSpreadsheetId = spreadsheetId || DEFAULT_SPREADSHEET_ID;
   const rowValues = formatRegistrationRow(registration);
 
   // 1. Try Apps Script Webhook if configured
@@ -190,7 +192,7 @@ export const appendRegistrationRow = async (
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          spreadsheetId,
+          spreadsheetId: targetSpreadsheetId,
           registration,
           row: rowValues
         })
@@ -207,7 +209,7 @@ export const appendRegistrationRow = async (
     if (token) {
       // Verify whether headers already exist on the first row; if empty, insert them
       try {
-        const checkRes = await fetch(`${SPREADSHEETS_API}/${spreadsheetId}/values/A1:U1`, {
+        const checkRes = await fetch(`${SPREADSHEETS_API}/${targetSpreadsheetId}/values/A1:U1`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (checkRes.ok) {
