@@ -78,8 +78,19 @@ function toTextCells(values) {
 function appendTextRow(sheet, values) {
   var rowNumber = sheet.getLastRow() + 1;
   var range = sheet.getRange(rowNumber, 1, 1, values.length);
-  range.setNumberFormat('@');
-  range.setValues([values]);
+  var formulas = [values.map(textFormula)];
+  range.setFormulas(formulas);
+}
+
+function textFormula(value) {
+  var text = value === null || value === undefined ? '' : String(value);
+  var lines = text.split(/\r\n|\n|\r/);
+  var parts = [];
+  for (var i = 0; i < lines.length; i++) {
+    if (i > 0) parts.push('CHAR(10)');
+    parts.push('"' + lines[i].replace(/"/g, '""') + '"');
+  }
+  return '=' + parts.join('&');
 }
 
 function nextPassId(sheet, domainName, trackName) {
