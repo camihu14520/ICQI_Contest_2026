@@ -13,9 +13,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
     {
       num: '01',
       title: '線上報名與書面報告繳交',
-      date: '即日起 至 2026年11月18日(星期三) 23:59 截止',
+      date: '即日起 至 2026年11月21日(星期六) 23:59 截止',
       startDate: new Date('2026-01-01T00:00:00'),
-      endDate: new Date('2026-11-18T23:59:59'),
+      endDate: new Date('2026-11-21T23:59:59'),
       defaultBadge: '開放收件',
       desc: '於本網站完成線上報名表單填寫，自動取得專屬參賽證號。須檢附 1 份作品報告書（至多10頁，可參閱範例說明）與全組（含指導老師）簽署之著作權授權暨個資使用同意書。',
       location: '線上受理 (本站或指定表單)'
@@ -23,8 +23,8 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
     {
       num: '02',
       title: '專家書面初審作業',
-      date: '2026年11月19日(四) 至 11月24日(二)',
-      startDate: new Date('2026-11-19T00:00:00'),
+      date: '2026年11月22日(日) 至 11月24日(二)',
+      startDate: new Date('2026-11-22T00:00:00'),
       endDate: new Date('2026-11-24T23:59:59'),
       defaultBadge: '審核階段',
       desc: '由產學研專家評審團進行書面審核，擇優遴選晉級決賽隊伍。初審評分標準依作品創新性、可行性、書面資料完整性審查。',
@@ -154,7 +154,7 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onRegisterClic
                 重要提醒：請及早完成線上報名與授權書上傳
               </h4>
               <p className="text-sm text-slate-600">
-                報名截止日為 2026/11/18(三) 23:59。完成線上送出後系統將即時產生「專屬參賽證號」，負責人亦將收到審核通知信。
+                報名截止日為 2026/11/21(六) 23:59。完成線上送出後系統將即時產生「專屬參賽證號」，負責人亦將收到審核通知信。
               </p>
             </div>
           </div>

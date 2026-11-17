@@ -20,8 +20,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onRegisterClick,
   onDownloadsClick
 }) => {
-  // Countdown to 2026-11-18 23:59:59 (Deadline)
-  const deadlineDate = new Date('2026-11-18T23:59:59').getTime();
+  // Countdown to 2026-11-21 23:59:59 (Deadline)
+  const deadlineDate = new Date('2026-11-21T23:59:59').getTime();
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
     hours: number;
@@ -220,7 +220,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <span className="text-xs font-bold tracking-wide uppercase">報名與繳件截止倒數</span>
                 </div>
                 <span className="text-xs px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">
-                  2026/11/18 23:59 截止
+                  2026/11/21 23:59 截止
                 </span>
               </div>
 
