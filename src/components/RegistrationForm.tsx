@@ -318,7 +318,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   // Prepare submission & preview
   const handleInitiateSubmit = () => {
-    if (!validateStep(4)) return;
+    if (!validateStep(1) || !validateStep(2) || !validateStep(3) || !validateStep(4)) return;
 
     const passId = generateNextPassId(category, track);
     const nowStr = new Date().toLocaleString('zh-TW', { hour12: false });
@@ -363,15 +363,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     try {
       const settings = getSettings();
 
-      // 1. Google Spreadsheet Sync (即時單向寫入主辦端試算表)
-      try {
-        await appendRegistrationRow(settings.spreadsheetId || DEFAULT_SPREADSHEET_ID, reg);
-        reg.syncedToGoogleSheet = true;
-      } catch (sheetErr) {
-        console.warn('Google Sheet append error:', sheetErr);
-      }
+      // 只有主辦端試算表確認寫入成功，才可以顯示報名完成。
+      // 參賽證號以 Apps Script 回傳的編號為準，避免和試算表不一致。
+      reg.id = await appendRegistrationRow(settings.spreadsheetId || DEFAULT_SPREADSHEET_ID, reg);
+      reg.syncedToGoogleSheet = true;
 
-      // 2. Automated Gmail Notification to Competition Director / Organizer
       if (settings.autoSendEmail) {
         try {
           const recipient = settings.coordinatorEmail || DEFAULT_COORDINATOR_EMAIL;
@@ -382,17 +378,14 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         }
       }
 
-      // 3. Persist locally to platform database
       saveRegistration(reg);
-
-      // 4. Directly display completed view
       setSubmittedRegistration(reg);
-
-      // 5. Notify parent
       onSuccessfulSubmit(reg);
 
     } catch (err: any) {
-      alert(`報名處理過程發生錯誤：${err.message}`);
+      console.warn('Registration was not accepted:', err);
+      setSubmittedRegistration(null);
+      setErrorMessage('報名尚未完成。資料未能確認寫入主辦端，請檢查網路後再按一次「確認無誤，送出報名！」。在看到「報名已完成」之前，請不要視為已報名。');
     } finally {
       setIsSubmitting(false);
     }

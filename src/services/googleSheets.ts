@@ -176,7 +176,7 @@ export const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfyc
 export const appendRegistrationRow = async (
   spreadsheetId: string = DEFAULT_SPREADSHEET_ID, 
   registration: CompetitionRegistration
-): Promise<boolean> => {
+): Promise<string> => {
   const targetSpreadsheetId = spreadsheetId || DEFAULT_SPREADSHEET_ID;
   const rowValues = formatRegistrationRow(registration);
 
@@ -186,73 +186,57 @@ export const appendRegistrationRow = async (
     : DEFAULT_APPS_SCRIPT_URL;
 
   if (appsScriptUrl) {
+    const res = await fetch(appsScriptUrl, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        spreadsheetId: targetSpreadsheetId,
+        registration,
+        row: rowValues
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error(`試算表寫入未成功（HTTP ${res.status}）`);
+    }
+
+    let data: { result?: string; id?: string } = {};
     try {
-      await fetch(appsScriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          spreadsheetId: targetSpreadsheetId,
-          registration,
-          row: rowValues
-        })
-      });
-      return true;
-    } catch (scriptErr) {
-      console.warn('Apps Script webhook dispatch error:', scriptErr);
+      data = await res.json();
+    } catch {
+      throw new Error('試算表寫入結果無法確認');
     }
+
+    if (data.result !== 'success' || !data.id) {
+      throw new Error('試算表未確認寫入成功');
+    }
+
+    return data.id;
   }
 
-  // 2. Try Google Sheets REST API if token exists
-  try {
-    const token = await getAccessToken();
-    if (token) {
-      // Verify whether headers already exist on the first row; if empty, insert them
-      try {
-        const checkRes = await fetch(`${SPREADSHEETS_API}/${targetSpreadsheetId}/values/A1:U1`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (checkRes.ok) {
-          const checkData = await checkRes.json();
-          if (!checkData.values || checkData.values.length === 0 || !checkData.values[0] || checkData.values[0].length === 0) {
-            await fetch(`${SPREADSHEETS_API}/${spreadsheetId}/values/A1:U1?valueInputOption=USER_ENTERED`, {
-              method: 'PUT',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                range: 'A1:U1',
-                majorDimension: 'ROWS',
-                values: [SHEET_HEADERS]
-              })
-            });
-          }
-        }
-      } catch (headerErr) {
-        console.warn('Could not verify/initialize headers:', headerErr);
-      }
-
-      const res = await fetch(`${SPREADSHEETS_API}/${spreadsheetId}/values/A:U:append?valueInputOption=USER_ENTERED`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          values: [rowValues]
-        })
-      });
-
-      if (res.ok) {
-        return true;
-      }
-    }
-  } catch (tokenErr) {
-    console.warn('Google Sheets API token write failed:', tokenErr);
+  const token = await getAccessToken();
+  if (!token) {
+    throw new Error('無法連線至報名試算表');
   }
 
-  return true;
+  const res = await fetch(`${SPREADSHEETS_API}/${targetSpreadsheetId}/values/A:U:append?valueInputOption=RAW`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      values: [rowValues]
+    })
+  });
+
+  if (!res.ok) {
+    const errorJson = await res.json().catch(() => ({}));
+    throw new Error(errorJson.error?.message || `試算表寫入未成功（HTTP ${res.status}）`);
+  }
+
+  return registration.id;
 };
 
 /**
