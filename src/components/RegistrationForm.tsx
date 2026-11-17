@@ -27,7 +27,7 @@ import {
   StudentMember, 
   AdvisorMember 
 } from '../types/competition';
-import { generateNextPassId, saveRegistration, getSettings } from '../services/storage';
+import { saveRegistration, getSettings } from '../services/storage';
 import { appendRegistrationRow, DEFAULT_SPREADSHEET_ID } from '../services/googleSheets';
 import { sendRegistrationNotificationEmail, DEFAULT_COORDINATOR_EMAIL } from '../services/gmail';
 
@@ -63,6 +63,28 @@ const TRACK_OPTIONS: { id: TrackType; name: string; desc: string; badge: string 
     desc: '提出前瞻人工智慧或量子計算之創新架構設計構想與商業解決方案',
     badge: '前瞻構想'
   }
+];
+
+function isEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+function isHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+const SERVER_ERROR_PREFIXES = [
+  '報名資料不完整',
+  '作品摘要不足',
+  '請填寫有效的隊長 Email',
+  '書面報告書連結必須是 http 或 https',
+  '授權同意書連結必須是 http 或 https',
+  'Demo 連結必須是 http 或 https'
 ];
 
 const APPLICATION_FIELDS: ApplicationField[] = [
@@ -262,11 +284,19 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         setErrorMessage('請填寫隊長聯絡電話與 Email');
         return false;
       }
+      if (!isEmail(leader.email)) {
+        setErrorMessage('請填寫有效的隊長 Email');
+        return false;
+      }
       // Check each member
       for (let i = 0; i < members.length; i++) {
         const m = members[i];
         if (!m.name.trim() || !m.school.trim() || !m.studentId.trim()) {
           setErrorMessage(`請完整填寫組員 ${i + 1} 的姓名、學校及學號`);
+          return false;
+        }
+        if (m.email.trim() && !isEmail(m.email)) {
+          setErrorMessage(`組員 ${i + 1} 的 Email 格式不正確`);
           return false;
         }
       }
@@ -278,6 +308,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         const a = advisors[i];
         if (!a.name.trim() || !a.institution.trim()) {
           setErrorMessage(`請填寫指導老師 ${i + 1} 的姓名與服務學校/機構`);
+          return false;
+        }
+        if (a.email.trim() && !isEmail(a.email)) {
+          setErrorMessage(`指導老師 ${i + 1} 的 Email 格式不正確`);
           return false;
         }
       }
@@ -293,8 +327,20 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         setErrorMessage('請提供書面報告書（上限10頁）之雲端硬碟公開分享連結');
         return false;
       }
+      if (!isHttpUrl(reportDocUrl)) {
+        setErrorMessage('書面報告書連結必須是 http 或 https 網址');
+        return false;
+      }
       if (!consentFormUrl.trim()) {
         setErrorMessage('請提供著作權授權暨個資使用同意書（含指導老師簽署）之雲端公開連結');
+        return false;
+      }
+      if (!isHttpUrl(consentFormUrl)) {
+        setErrorMessage('授權同意書連結必須是 http 或 https 網址');
+        return false;
+      }
+      if (demoUrl.trim() && !isHttpUrl(demoUrl)) {
+        setErrorMessage('Demo 連結必須是 http 或 https 網址');
         return false;
       }
       return true;
@@ -320,14 +366,13 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const handleInitiateSubmit = () => {
     if (!validateStep(1) || !validateStep(2) || !validateStep(3) || !validateStep(4)) return;
 
-    const passId = generateNextPassId(category, track);
     const nowStr = new Date().toLocaleString('zh-TW', { hour12: false });
     const finalDomain = (applicationDomain === '其他' && customDomain.trim()) 
       ? `其他 - ${customDomain.trim()}` 
       : applicationDomain;
 
     const newReg: CompetitionRegistration = {
-      id: passId,
+      id: '',
       category,
       track,
       applicationDomain: finalDomain as ApplicationField,
@@ -382,10 +427,14 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       setSubmittedRegistration(reg);
       onSuccessfulSubmit(reg);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.warn('Registration was not accepted:', err);
       setSubmittedRegistration(null);
-      setErrorMessage('報名尚未完成。資料未能確認寫入主辦端，請檢查網路後再按一次「確認無誤，送出報名！」。在看到「報名已完成」之前，請不要視為已報名。');
+      const message = err instanceof Error ? err.message : '';
+      const canShow = SERVER_ERROR_PREFIXES.some((prefix) => message.startsWith(prefix));
+      setErrorMessage(canShow
+        ? message
+        : '報名尚未完成。資料未能確認寫入主辦端，請檢查網路後再按一次「確認無誤，送出報名！」。在看到「報名已完成」之前，請不要視為已報名。');
     } finally {
       setIsSubmitting(false);
     }
@@ -1200,23 +1249,22 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
             <div className="space-y-6 animate-fadeIn">
               <div>
                 <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  步驟 5：報名資料總覽確認與參賽證號核發
+                  步驟 5：報名資料總覽確認
                 </h3>
                 <p className="text-xs text-slate-500">
-                  送出後系統將立即自動生成專屬參賽證編號並正式受理報名。
+                  請核對下列資料。主辦端確認收件後，完成畫面才會顯示正式參賽證號。
                 </p>
               </div>
 
-              {/* Generated Pass ID Banner Preview */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-900 via-blue-800 to-sky-900 text-white shadow-md">
+              <div className="p-5 rounded-2xl bg-slate-900 text-white shadow-md">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-2xs font-semibold text-cyan-300 uppercase tracking-widest">
-                      系統預計核發參賽證號 (Anticipated Pass ID)
+                    <span className="text-xs font-semibold text-cyan-300">
+                      參賽證號於報名完成後核發
                     </span>
-                    <div className="text-2xl font-black font-mono tracking-tight text-white mt-0.5">
-                      {generateNextPassId(category, track)}
-                    </div>
+                    <p className="text-sm text-slate-200 mt-1 leading-relaxed">
+                      送出前不會預先顯示證號。請以報名完成畫面上的編號為準。
+                    </p>
                   </div>
                   <div className="text-xs text-cyan-200 bg-white/10 px-3 py-1.5 rounded-lg border border-white/15">
                     {category === 'ai' ? '人工智慧' : '量子計算'} · {track === 'implementation' ? '實作組' : '創意組'}
@@ -1260,9 +1308,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 <div className="pt-3 border-t border-slate-200/80">
                   <span className="text-xs text-slate-400 block mb-1">檔案檢視連結</span>
                   <div className="space-y-1 text-xs">
-                    <p className="truncate">📄 報告書：<a href={reportDocUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline">{reportDocUrl}</a></p>
-                    <p className="truncate">📝 授權書：<a href={consentFormUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline">{consentFormUrl}</a></p>
-                    {demoUrl && <p className="truncate">🎬 成果Demo：<a href={demoUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline">{demoUrl}</a></p>}
+                    <p className="truncate">📄 報告書：{isHttpUrl(reportDocUrl) ? <a href={reportDocUrl.trim()} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{reportDocUrl}</a> : reportDocUrl}</p>
+                    <p className="truncate">📝 授權書：{isHttpUrl(consentFormUrl) ? <a href={consentFormUrl.trim()} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{consentFormUrl}</a> : consentFormUrl}</p>
+                    {demoUrl && <p className="truncate">🎬 成果Demo：{isHttpUrl(demoUrl) ? <a href={demoUrl.trim()} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{demoUrl}</a> : demoUrl}</p>}
                   </div>
                 </div>
               </div>
@@ -1276,7 +1324,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       線上報名資料即時受理
                     </span>
                     <p className="text-slate-600 mt-0.5">
-                      點擊下方「確認無誤，送出報名！」後，系統將正式核發專屬參賽證編號，並登記報名資料供隨時線上查詢。
+                      點擊下方「確認無誤，送出報名！」後，主辦端確認收件才會核發參賽證號，並顯示在報名完成畫面。
                     </p>
                   </div>
                 </div>
@@ -1336,10 +1384,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
             </div>
 
             <p className="text-sm text-slate-600 leading-relaxed">
-              即將為隊伍 <strong>「{pendingRegistration.teamName}」</strong> 正式核發參賽證號：
-              <span className="font-mono font-bold text-blue-600 ml-1">
-                {pendingRegistration.id}
-              </span>
+              即將送出隊伍 <strong>「{pendingRegistration.teamName}」</strong> 的報名資料。參賽證號會在主辦端確認收件後，顯示於報名完成畫面。
             </p>
 
             <div className="bg-blue-50 p-4 rounded-xl text-xs text-blue-900 border border-blue-200 space-y-1">

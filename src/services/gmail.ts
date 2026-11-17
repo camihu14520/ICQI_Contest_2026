@@ -3,6 +3,25 @@ import { getAccessToken } from './googleAuth';
 
 const GMAIL_API = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeHttpHref(value: string): string | null {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return escapeHtml(url.toString());
+  } catch {
+    return null;
+  }
+}
+
 // Default contest coordinator email at CYCU ICQI
 export const DEFAULT_COORDINATOR_EMAIL = 'icqi@cycu.edu.tw';
 
@@ -71,18 +90,22 @@ export const sendRegistrationNotificationEmail = async (
   const membersHtml = registration.members.length > 0
     ? registration.members.map((m, idx) => `
         <li style="margin-bottom: 4px;">
-          <strong>隊員 ${idx + 1}：</strong>${m.name} / ${m.school} ${m.department} (${m.grade}) / 學號：${m.studentId} / 信箱：${m.email} / 電話：${m.phone}
+          <strong>隊員 ${idx + 1}：</strong>${escapeHtml(m.name)} / ${escapeHtml(m.school)} ${escapeHtml(m.department)} (${escapeHtml(m.grade)}) / 學號：${escapeHtml(m.studentId)} / 信箱：${escapeHtml(m.email)} / 電話：${escapeHtml(m.phone)}
         </li>
       `).join('')
     : '<li><em>個人參賽 (無其他隊員)</em></li>';
 
   const advisorsHtml = registration.advisors.map((a, idx) => `
       <li style="margin-bottom: 4px;">
-        <strong>指導老師 ${idx + 1}：</strong>${a.name} (${a.institution} - ${a.title}) / 信箱：${a.email} / 電話：${a.phone}
+        <strong>指導老師 ${idx + 1}：</strong>${escapeHtml(a.name)} (${escapeHtml(a.institution)} - ${escapeHtml(a.title)}) / 信箱：${escapeHtml(a.email)} / 電話：${escapeHtml(a.phone)}
       </li>
     `).join('');
 
   const subject = `【2026全國智慧運算與量子資訊競賽】新報名成功通知：${registration.id} - ${registration.projectName}`;
+  const leaderEmail = escapeHtml(registration.leader.email);
+  const reportHref = safeHttpHref(registration.reportDocUrl);
+  const consentHref = safeHttpHref(registration.consentFormUrl);
+  const demoHref = registration.demoUrl ? safeHttpHref(registration.demoUrl) : null;
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -105,7 +128,7 @@ export const sendRegistrationNotificationEmail = async (
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; width: 140px; color: #64748b; font-weight: 600;">參賽證編號</td>
-              <td style="padding: 10px 0; color: #0284c7; font-weight: 700; font-size: 16px;">${registration.id}</td>
+              <td style="padding: 10px 0; color: #0284c7; font-weight: 700; font-size: 16px;">${escapeHtml(registration.id)}</td>
             </tr>
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">報名組別</td>
@@ -113,33 +136,33 @@ export const sendRegistrationNotificationEmail = async (
             </tr>
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">應用領域</td>
-              <td style="padding: 10px 0; color: #0f172a;">${registration.applicationDomain}</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escapeHtml(registration.applicationDomain)}</td>
             </tr>
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">作品名稱</td>
-              <td style="padding: 10px 0; color: #0f172a; font-weight: 600;">${registration.projectName}</td>
+              <td style="padding: 10px 0; color: #0f172a; font-weight: 600;">${escapeHtml(registration.projectName)}</td>
             </tr>
             ${registration.projectEnName ? `
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">英文名稱</td>
-              <td style="padding: 10px 0; color: #475569;">${registration.projectEnName}</td>
+              <td style="padding: 10px 0; color: #475569;">${escapeHtml(registration.projectEnName)}</td>
             </tr>` : ''}
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">隊伍名稱</td>
-              <td style="padding: 10px 0; color: #0f172a;">${registration.teamName}</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escapeHtml(registration.teamName)}</td>
             </tr>
             <tr style="border-bottom: 1px solid #f1f5f9;">
               <td style="padding: 10px 0; color: #64748b; font-weight: 600;">報名時間</td>
-              <td style="padding: 10px 0; color: #64748b;">${registration.submittedAt}</td>
+              <td style="padding: 10px 0; color: #64748b;">${escapeHtml(registration.submittedAt)}</td>
             </tr>
           </table>
 
           <h3 style="font-size: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin: 20px 0 12px 0;">隊長與成員資訊</h3>
           <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; font-size: 13.5px; margin-bottom: 16px;">
-            <p style="margin: 0 0 6px 0;"><strong>隊長 (聯絡代表)：</strong>${registration.leader.name} (${registration.leader.school} ${registration.leader.department} ${registration.leader.grade})</p>
-            <p style="margin: 0 0 6px 0;"><strong>學號：</strong>${registration.leader.studentId}</p>
-            <p style="margin: 0 0 6px 0;"><strong>聯絡信箱：</strong><a href="mailto:${registration.leader.email}" style="color: #0284c7;">${registration.leader.email}</a></p>
-            <p style="margin: 0;"><strong>聯絡電話：</strong>${registration.leader.phone}</p>
+            <p style="margin: 0 0 6px 0;"><strong>隊長 (聯絡代表)：</strong>${escapeHtml(registration.leader.name)} (${escapeHtml(registration.leader.school)} ${escapeHtml(registration.leader.department)} ${escapeHtml(registration.leader.grade)})</p>
+            <p style="margin: 0 0 6px 0;"><strong>學號：</strong>${escapeHtml(registration.leader.studentId)}</p>
+            <p style="margin: 0 0 6px 0;"><strong>聯絡信箱：</strong>${leaderEmail}</p>
+            <p style="margin: 0;"><strong>聯絡電話：</strong>${escapeHtml(registration.leader.phone)}</p>
           </div>
 
           <p style="font-size: 14px; font-weight: 600; margin: 12px 0 6px 0;">其他隊員名單：</p>
@@ -154,14 +177,14 @@ export const sendRegistrationNotificationEmail = async (
 
           <h3 style="font-size: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin: 20px 0 12px 0;">作品摘要 (300~500字)</h3>
           <div style="background: #f1f5f9; padding: 14px; border-radius: 8px; font-size: 13px; line-height: 1.7; color: #334155; white-space: pre-wrap; margin-bottom: 20px;">
-${registration.abstract}
+${escapeHtml(registration.abstract)}
           </div>
 
           <h3 style="font-size: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin: 20px 0 12px 0;">繳交檔案與相關連結</h3>
           <div style="font-size: 13.5px;">
-            <p style="margin: 8px 0;">📄 <strong>書面報告書 (至多10頁)：</strong> <a href="${registration.reportDocUrl}" target="_blank" style="color: #0284c7; word-break: break-all;">${registration.reportDocUrl}</a></p>
-            <p style="margin: 8px 0;">📝 <strong>授權同意書 (全組含指導老師)：</strong> <a href="${registration.consentFormUrl}" target="_blank" style="color: #0284c7; word-break: break-all;">${registration.consentFormUrl}</a></p>
-            ${registration.demoUrl ? `<p style="margin: 8px 0;">🎬 <strong>成果影片 / 系統展示：</strong> <a href="${registration.demoUrl}" target="_blank" style="color: #0284c7; word-break: break-all;">${registration.demoUrl}</a></p>` : ''}
+            <p style="margin: 8px 0;">📄 <strong>書面報告書 (至多10頁)：</strong> ${reportHref ? `<a href="${reportHref}" target="_blank" rel="noopener noreferrer" style="color: #0284c7; word-break: break-all;">${reportHref}</a>` : escapeHtml(registration.reportDocUrl)}</p>
+            <p style="margin: 8px 0;">📝 <strong>授權同意書 (全組含指導老師)：</strong> ${consentHref ? `<a href="${consentHref}" target="_blank" rel="noopener noreferrer" style="color: #0284c7; word-break: break-all;">${consentHref}</a>` : escapeHtml(registration.consentFormUrl)}</p>
+            ${registration.demoUrl ? `<p style="margin: 8px 0;">🎬 <strong>成果影片 / 系統展示：</strong> ${demoHref ? `<a href="${demoHref}" target="_blank" rel="noopener noreferrer" style="color: #0284c7; word-break: break-all;">${demoHref}</a>` : escapeHtml(registration.demoUrl)}</p>` : ''}
           </div>
 
           <div style="margin-top: 30px; padding: 16px; background: #e0f2fe; border-radius: 8px; text-align: center;">

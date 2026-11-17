@@ -1,4 +1,4 @@
-import { CompetitionRegistration, DomainCategory, TrackType, ReviewStatus } from '../types/competition';
+import { CompetitionRegistration, ReviewStatus } from '../types/competition';
 
 const STORAGE_KEY = 'cycu_icqi_2026_registrations';
 const SETTINGS_KEY = 'cycu_icqi_2026_settings';
@@ -49,24 +49,6 @@ export const updateRegistrationStatus = (
   _adminNotes?: string
 ): CompetitionRegistration | null => {
   return null;
-};
-
-/**
- * Generate sequential/unique certificate pass ID according to official format:
- * Category: AI -> AI, Quantum -> QC
- * Track: Implementation -> P (Practice/Project), Concept -> C (Creative Concept)
- * Year: 2026
- * Format: CYCU-[AI|QC]-2026-[P|C]XXX
- */
-export const generateNextPassId = (category: DomainCategory, track: TrackType): string => {
-  const domainCode = category === 'ai' ? 'AI' : 'QC';
-  const trackCode = track === 'implementation' ? 'P' : 'C';
-  const prefix = `CYCU-${domainCode}-2026-${trackCode}`;
-
-  // Generate random 3-digit sequential-like index (e.g., P012 ~ P999) without relying on client-stored PII
-  const randomNum = Math.floor(10 + Math.random() * 890);
-  const nextNum = randomNum.toString().padStart(3, '0');
-  return `${prefix}${nextNum}`;
 };
 
 export const getSettings = (): AppSettings => {

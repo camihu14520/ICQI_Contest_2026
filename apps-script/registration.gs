@@ -46,6 +46,10 @@ function doPost(e) {
     }
 
     var row = toTextCells(data.row);
+    var problem = validateRow(row);
+    if (problem) {
+      return jsonResponse({ result: 'error', message: problem });
+    }
     row[0] = nextPassId(sheet, row[2], row[3]);
     appendTextRow(sheet, row);
 
@@ -73,6 +77,34 @@ function toTextCells(values) {
     cells.push(text);
   }
   return cells;
+}
+
+function validateRow(row) {
+  if (!row || row.length < 18) return '報名資料不完整';
+  var required = [2, 3, 5, 6, 8, 9, 10, 11, 12, 15, 16, 17];
+  for (var i = 0; i < required.length; i++) {
+    if (!String(row[required[i]] || '').replace(/^\s+|\s+$/g, '')) return '報名資料不完整';
+  }
+  if (String(row[15]).replace(/^\s+|\s+$/g, '').length < 50) return '作品摘要不足，請至少填寫 50 字';
+  if (!isEmailAddress(row[12])) return '請填寫有效的隊長 Email';
+  if (!isHttpUrl(row[16])) return '書面報告書連結必須是 http 或 https 網址';
+  if (!isHttpUrl(row[17])) return '授權同意書連結必須是 http 或 https 網址';
+  var demo = String(row[18] || '').replace(/^\s+|\s+$/g, '');
+  if (demo && demo !== '無' && !isHttpUrl(demo)) return 'Demo 連結必須是 http 或 https 網址';
+  return '';
+}
+
+function isEmailAddress(value) {
+  var text = String(value || '').replace(/^\s+|\s+$/g, '');
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text);
+}
+
+function isHttpUrl(value) {
+  var text = String(value || '').replace(/^\s+|\s+$/g, '');
+  var lower = text.toLowerCase();
+  if (lower.indexOf('https://') !== 0 && lower.indexOf('http://') !== 0) return false;
+  if (text.indexOf(' ') !== -1 || text.indexOf('\n') !== -1 || text.indexOf('\r') !== -1) return false;
+  return true;
 }
 
 function appendTextRow(sheet, values) {

@@ -174,69 +174,34 @@ export const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfyc
  * Append a single registration row to the Google Spreadsheet
  */
 export const appendRegistrationRow = async (
-  spreadsheetId: string = DEFAULT_SPREADSHEET_ID, 
+  _spreadsheetId: string = DEFAULT_SPREADSHEET_ID,
   registration: CompetitionRegistration
 ): Promise<string> => {
-  const targetSpreadsheetId = spreadsheetId || DEFAULT_SPREADSHEET_ID;
   const rowValues = formatRegistrationRow(registration);
-
-  // 1. Try Apps Script Webhook if configured
-  const appsScriptUrl = typeof window !== 'undefined' 
-    ? (localStorage.getItem('cycu_icqi_apps_script_url') || DEFAULT_APPS_SCRIPT_URL) 
-    : DEFAULT_APPS_SCRIPT_URL;
-
-  if (appsScriptUrl) {
-    const res = await fetch(appsScriptUrl, {
-      method: 'POST',
-      redirect: 'follow',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        spreadsheetId: targetSpreadsheetId,
-        registration,
-        row: rowValues
-      })
-    });
-
-    if (!res.ok) {
-      throw new Error(`試算表寫入未成功（HTTP ${res.status}）`);
-    }
-
-    let data: { result?: string; id?: string } = {};
-    try {
-      data = await res.json();
-    } catch {
-      throw new Error('試算表寫入結果無法確認');
-    }
-
-    if (data.result !== 'success' || !data.id) {
-      throw new Error('試算表未確認寫入成功');
-    }
-
-    return data.id;
-  }
-
-  const token = await getAccessToken();
-  if (!token) {
-    throw new Error('無法連線至報名試算表');
-  }
-
-  const res = await fetch(`${SPREADSHEETS_API}/${targetSpreadsheetId}/values/A:U:append?valueInputOption=RAW`, {
+  const res = await fetch(DEFAULT_APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      values: [rowValues]
-    })
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ row: rowValues })
   });
 
   if (!res.ok) {
-    const errorJson = await res.json().catch(() => ({}));
-    throw new Error(errorJson.error?.message || `試算表寫入未成功（HTTP ${res.status}）`);
+    throw new Error(`試算表寫入未成功（HTTP ${res.status}）`);
   }
 
-  return registration.id;
+  let data: { result?: string; id?: string; message?: string } = {};
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error('試算表寫入結果無法確認');
+  }
+
+  if (data.result !== 'success' || !data.id) {
+    const message = typeof data.message === 'string' ? data.message.trim() : '';
+    throw new Error(message && message.length <= 120 ? message : '試算表未確認寫入成功');
+  }
+
+  return data.id;
 };
 
 /**
